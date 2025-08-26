@@ -5,7 +5,7 @@ import { useTasks } from "../context/TasksContext.jsx";
 import { useUsers } from "../context/UsersContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import PriorityBadge from "../components/PriorityBadge.jsx";
-import { formatDate } from "../context/utils.js";
+import { formatDate, toStatusClass } from "../context/utils.js";
 
 export default function TaskDetail() {
   const { id } = useParams();
@@ -68,7 +68,7 @@ export default function TaskDetail() {
         </div>
         <div className="row">
           <span className="key">Durum:</span>{" "}
-          <span className={`status ${task.status}`}>{task.status}</span>
+          <span className={toStatusClass(task.status)}>{task.status}</span>
         </div>
         <div className="row">
           <span className="key">Atanan Kullanıcı:</span>{" "}

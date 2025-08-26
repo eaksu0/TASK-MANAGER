@@ -5,9 +5,10 @@ import { PRIORITIES, STATUSES } from "../context/constants.js";
 import { useTasks } from "../context/TasksContext.jsx";
 import TaskCard from "../components/TaskCard.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import { toStatusClass } from "../context/utils.js";
 
 export default function TasksPage() {
-  const { currentUser, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const { tasks, updateTask, deleteTask } = useTasks();
 
   const [q, setQ] = useState("");
@@ -15,13 +16,13 @@ export default function TasksPage() {
   const [priority, setPriority] = useState("tumu");
 
   const filtered = useMemo(() => {
-    const base = isAdmin ? tasks : tasks.filter(t => t.assignedTo === currentUser?.id);
+    const base = tasks;
     return base
-      .filter(t => (status === "tumu" ? true : t.status === status))
+      .filter(t => (status === "tumu" ? true : toStatusClass(t.status) === status))
       .filter(t => (priority === "tumu" ? true : t.priority === priority))
       .filter(t => (q.trim() ? t.title.toLowerCase().includes(q.trim().toLowerCase()) : true))
       .sort((a, b) => (a.status === "tamamlandi" && b.status !== "tamamlandi" ? 1 : -1));
-  }, [tasks, status, priority, q, isAdmin, currentUser]);
+  }, [tasks, status, priority, q]);
 
   return (
     <section>
@@ -45,7 +46,7 @@ export default function TasksPage() {
 
       <div className="grid grid-2">
         {filtered.length === 0 && (
-          <div className="empty">Henuz gorev yok. {isAdmin ? "Ilk gorevi olusturmak icin sag ustteki butonu kullan." : ""}</div>
+          <div className="empty">Henuz gorev yok.</div>
         )}
         {filtered.map(t => (
           <TaskCard

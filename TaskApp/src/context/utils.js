@@ -32,3 +32,17 @@ export function formatDate(iso) {
         return iso;
     }
 }
+
+// Durum anahtarını CSS sınıfı için normalize et (Türkçe karakterleri İngilizce'ye çevir)
+export function toStatusClass(s) {
+    const base = (s ?? "").toString().trim().toLowerCase();
+    const map = {
+        "ı": "i", "İ": "i",
+        "ö": "o", "Ö": "o",
+        "ü": "u", "Ü": "u",
+        "ş": "s", "Ş": "s",
+        "ğ": "g", "Ğ": "g",
+        "ç": "c", "Ç": "c",
+    };
+    return base.replace(/[İıÖöÜüŞşĞğÇç]/g, ch => map[ch] || ch);
+}

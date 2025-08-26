@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import StatusSelect from "./StatusSelect.jsx";
 import PriorityBadge from "./PriorityBadge.jsx";
-import { formatDate } from "../context/utils.js";
+import { formatDate, toStatusClass } from "../context/utils.js";
 import { useUsers } from "../context/UsersContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
@@ -11,6 +11,8 @@ export default function TaskCard({ task, onStatusChange, onDelete }) {
     const { getUserById } = useUsers();
     const { isAdmin } = useAuth();
     const assignee = task.assignedTo ? getUserById(task.assignedTo) : null;
+
+    const statusClass = `status ${toStatusClass(task.status)}`;
 
     return (
         <div className="card">
@@ -33,7 +35,7 @@ export default function TaskCard({ task, onStatusChange, onDelete }) {
                     {isAdmin && onStatusChange ? (
                         <StatusSelect value={task.status} onChange={onStatusChange} />
                     ) : (
-                        <span className={`status ${task.status}`}>{task.status}</span>
+                        <span className={statusClass}>{task.status}</span>
                     )}
                 </div>
             </div>

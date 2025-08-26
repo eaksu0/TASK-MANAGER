@@ -1,0 +1,48 @@
+﻿// Liste görünümündeki tek görev kartı
+import React from "react";
+import { Link } from "react-router-dom";
+import StatusSelect from "./StatusSelect.jsx";
+import PriorityBadge from "./PriorityBadge.jsx";
+import { formatDate } from "../context/utils.js";
+import { useUsers } from "../context/UsersContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+
+export default function TaskCard({ task, onStatusChange, onDelete }) {
+    const { getUserById } = useUsers();
+    const { isAdmin } = useAuth();
+    const assignee = task.assignedTo ? getUserById(task.assignedTo) : null;
+
+    return (
+        <div className="card">
+            <div className="card-head">
+                <h3 className="card-title clamp-1">{task.title}</h3>
+                <PriorityBadge priority={task.priority} />
+            </div>
+
+            {task.description && <p className="muted clamp-2">{task.description}</p>}
+
+            <div className="card-meta">
+                <div>
+                    <span className="key">Son teslim:</span> {formatDate(task.deadline)}
+                </div>
+                <div>
+                    <span className="key">Atanan:</span> {assignee ? assignee.name : "—"}
+                </div>
+                <div className="status-wrap">
+                    <span className="key">Durum:</span>
+                    {isAdmin && onStatusChange ? (
+                        <StatusSelect value={task.status} onChange={onStatusChange} />
+                    ) : (
+                        <span className={`status ${task.status}`}>{task.status}</span>
+                    )}
+                </div>
+            </div>
+
+            <div className="card-actions">
+                <Link className="btn-ghost" to={`/task/${task.id}`}>Detay</Link>
+                {isAdmin && <Link className="btn-ghost" to={`/edit/${task.id}`}>Duzenle</Link>}
+                {isAdmin && <button className="btn-danger" onClick={onDelete}>Sil</button>}
+            </div>
+        </div>
+    );
+}

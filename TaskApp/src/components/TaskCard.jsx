@@ -1,5 +1,5 @@
 ﻿// Liste görünümündeki tek görev kartı
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import StatusSelect from "./StatusSelect.jsx";
 import PriorityBadge from "./PriorityBadge.jsx";
@@ -13,6 +13,15 @@ export default function TaskCard({ task, onStatusChange, onDelete }) {
     const assignee = task.assignedTo ? getUserById(task.assignedTo) : null;
 
     const statusClass = `status ${toStatusClass(task.status)}`;
+
+    // Durum düzenleme togglesı
+    const [editingStatus, setEditingStatus] = useState(false);
+    const canEditStatus = typeof onStatusChange === "function";
+
+    function handleStatusChange(newVal) {
+        onStatusChange?.(newVal);
+        setEditingStatus(false);
+    }
 
     return (
         <div className="card">
@@ -32,10 +41,18 @@ export default function TaskCard({ task, onStatusChange, onDelete }) {
                 </div>
                 <div className="status-wrap">
                     <span className="key">Durum:</span>
-                    {isAdmin && onStatusChange ? (
-                        <StatusSelect value={task.status} onChange={onStatusChange} />
+                    {editingStatus && canEditStatus ? (
+                        <>
+                            <StatusSelect value={task.status} onChange={handleStatusChange} />
+                            <button className="btn-ghost" onClick={() => setEditingStatus(false)}>Iptal</button>
+                        </>
                     ) : (
-                        <span className={statusClass}>{task.status}</span>
+                        <>
+                            <span className={statusClass}>{task.status}</span>
+                            {canEditStatus && (
+                                <button className="btn-ghost" onClick={() => setEditingStatus(true)}>Duzenle</button>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

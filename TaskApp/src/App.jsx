@@ -16,10 +16,10 @@ export default function App() {
     const { tasks } = useTasks();
     const navigate = useNavigate();
 
-    // Yalnızca mevcut kullanıcıya atanmış aktif (yapilacak) görevlerin sayısı
+    // Yalnızca mevcut kullanıcıya atanmış aktif (yapiliyor/yapilacak) görevlerin sayısı
     const activeCount = useMemo(() => {
         if (!currentUser) return 0;
-        return tasks.filter(t => t.assignedTo === currentUser.id && toStatusClass(t.status) === "yapilacak").length;
+        return tasks.filter(t => t.assignedTo === currentUser.id && ["yapilacak","yapiliyor"].includes(toStatusClass(t.status))).length;
     }, [tasks, currentUser]);
 
     return (

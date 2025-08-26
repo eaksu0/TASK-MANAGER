@@ -273,6 +273,7 @@ body {
 .status.tamamlandi { color: var(--green); background: #ecfdf5; border-color: #d1fae5 }
 .status.yapiliyor { color: var(--amber); background: #fffbeb; border-color: #fde68a }
 .status.yapilacak { color: var(--blue); background: #eff6ff; border-color: #bfdbfe }
+.status.iptal-edildi { color: #991b1b; background: #fef2f2; border-color: #fecaca }
 
 /* Badges */
 .badge {

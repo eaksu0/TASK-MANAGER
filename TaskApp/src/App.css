@@ -1,0 +1,58 @@
+﻿@charset "UTF-8";
+
+/* App-level layout helpers (keeps footer at the bottom) */
+.app-shell { min-height: 100vh; display: flex; flex-direction: column; }
+.app-footer { flex-shrink: 0; }
+main.container { flex: 1 0 auto; }
+
+/* Subtle animations */
+@keyframes fade-in { from { opacity: 0; transform: translateY(3px) } to { opacity: 1; transform: none } }
+.fade-in { animation: fade-in .22s ease-out both; }
+
+/* Small utilities */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.divider { height: 1px; width: 100%; background: #e5e7eb }
+.spacer { flex: 1 1 auto }
+
+/* Icon button (can be used where needed) */
+.btn-icon { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.btn-icon > svg { width: 16px; height: 16px }
+
+/* Smooth color transitions on theme changes */
+body { transition: background-color .2s ease, color .2s ease }
+
+/* Auto dark theme via prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a; 
+    --fg: #e5e7eb; /* zinc-200 */
+    --muted: #94a3b8; /* slate-400 */
+    --border: #1f2937; /* gray-800 */
+    --blue-50: rgba(37, 99, 235, .18);
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --green: #22c55e;
+  }
+
+  /* Surfaces */
+  .app-header { background: rgba(17, 24, 39, .85); border-bottom-color: #1f2937 }
+  .toolbar, .empty, .card, .list-item, .table { background: #111827; border-color: #374151 }
+
+  /* Ghost button */
+  .btn-ghost { background: rgba(255,255,255,.02); color: var(--fg); border-color: #374151 }
+  .btn-ghost:hover { background: rgba(255,255,255,.04); box-shadow: none }
+
+  /* Inputs */
+  .input, .select, .textarea { background: #0b1220; color: var(--fg); border-color: #374151 }
+  .input::placeholder, .textarea::placeholder { color: #6b7280 }
+
+  /* Status pills tweak for dark */
+  .status.tamamlandi { color: var(--green); background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.32) }
+  .status.yapiliyor { color: var(--amber); background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.32) }
+  .status.yapilacak { color: var(--blue); background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.32) }
+
+  /* Priority badges */
+  .badge.blue { background: rgba(37,99,235,.15); color: #93c5fd; border-color: #1e3a8a }
+  .badge.amber { background: rgba(245,158,11,.15); color: #fcd34d; border-color: #92400e }
+  .badge.red { background: rgba(239,68,68,.15); color: #fca5a5; border-color: #7f1d1d }
+}

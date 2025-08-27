@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import { TasksProvider } from "./context/TasksContext.jsx";
 import { UsersProvider } from "./context/UsersContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { MailProvider } from "./context/MailContext.jsx";
 import "./index.css";
 import "./App.css";
 
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <UsersProvider>
         <AuthProvider>
           <TasksProvider>
-            <App />
+            <MailProvider>
+              <App />
+            </MailProvider>
           </TasksProvider>
         </AuthProvider>
       </UsersProvider>

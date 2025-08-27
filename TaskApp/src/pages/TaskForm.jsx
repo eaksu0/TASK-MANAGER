@@ -5,6 +5,7 @@ import { useTasks } from "../context/TasksContext.jsx";
 import { PRIORITIES, STATUSES } from "../context/constants.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useUsers } from "../context/UsersContext.jsx";
+import { useMail } from "../context/MailContext.jsx";
 
 export default function TaskForm() {
     const { id } = useParams();
@@ -12,6 +13,7 @@ export default function TaskForm() {
     const { getTaskById, createTask, updateTask } = useTasks();
     const { currentUser, isAdmin } = useAuth();
     const { users } = useUsers();
+    const { sendAssignmentEmail } = useMail();
 
     const editingTask = id ? getTaskById(id) : null;
 
@@ -49,7 +51,7 @@ export default function TaskForm() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, currentUser, isAdmin]);
 
-    function onSubmit(e) {
+    async function onSubmit(e) {
         e.preventDefault();
         if (!title.trim()) { alert("Başlık zorunludur."); return; }
 
@@ -64,9 +66,25 @@ export default function TaskForm() {
 
         if (editingTask) {
             updateTask(editingTask.id, payload);
+            // Atanan kişi değiştiyse mail gönder
+            const prevAssigneeId = editingTask.assignedTo ?? null;
+            const nextAssigneeId = payload.assignedTo ?? null;
+            if (prevAssigneeId !== nextAssigneeId && nextAssigneeId) {
+                const user = users.find(u => u.id === nextAssigneeId);
+                if (user) {
+                    try { await sendAssignmentEmail({ ...editingTask, ...payload }, user, currentUser); } catch { /* noop */ }
+                }
+            }
             navigate("/", { replace: true });
         } else {
-            createTask(payload);
+            const newId = createTask(payload);
+            // Yeni görev atandıysa mail
+            if (payload.assignedTo) {
+                const user = users.find(u => u.id === payload.assignedTo);
+                if (user) {
+                    try { await sendAssignmentEmail({ id: newId, ...payload }, user, currentUser); } catch { /* noop */ }
+                }
+            }
             navigate("/", { replace: true });
         }
     }

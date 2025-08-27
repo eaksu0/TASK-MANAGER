@@ -30,7 +30,7 @@ export default function TasksPage() {
       .filter(t => (priority === "tumu" ? true : t.priority === priority))
       .filter(t => (q.trim() ? t.title.toLowerCase().includes(q.trim().toLowerCase()) : true))
       .sort((a, b) => (toStatusClass(a.status) === "tamamlandi" && toStatusClass(b.status) !== "tamamlandi" ? 1 : -1));
-  }, [tasks, status, priority, q, isAdmin, currentUser]);
+  }, [tasks, status, priority, q, isAdmin, currentUser, VISIBLE_STATUSES]);
 
   return (
     <section>

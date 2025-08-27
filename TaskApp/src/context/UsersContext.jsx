@@ -17,16 +17,28 @@ export function UsersProvider({ children }) {
   const [users, setUsers] = useState(() => {
     const list = loadUsers();
     if (Array.isArray(list) && list.length > 0) return list;
-    // İlk açılışta admin seed et
-    const initial = [{
-      id: uid(),
-      name: "Admin",
-      email: "admin@local",
-      password: "admin",
-      role: "admin",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }];
+    // İlk açılışta admin + Yücel seed et
+    const now = new Date().toISOString();
+    const initial = [
+      {
+        id: uid(),
+        name: "Admin",
+        email: "admin@local",
+        password: "admin",
+        role: "admin",
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        id: uid(),
+        name: "Yücel Kandaş",
+        email: "yucel_kandas@hotmail.com",
+        password: "1234",
+        role: "user",
+        createdAt: now,
+        updatedAt: now,
+      }
+    ];
     saveUsers(initial);
     return initial;
   });

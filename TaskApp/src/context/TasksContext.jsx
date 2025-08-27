@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+﻿import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 
 // LocalStorage anahtarı
 const STORAGE_KEY = "taskpro.tasks.v1";
@@ -30,23 +30,23 @@ export function TasksProvider({ children }) {
     useEffect(() => { saveTasks(tasks); }, [tasks]);
 
     // CRUD
-    function createTask({ title, description = "", priority = "orta", deadline = "", status = "yapilacak", assignedTo = null }) {
+    const createTask = useCallback(({ title, description = "", priority = "orta", deadline = "", status = "yapilacak", assignedTo = null }) => {
         const now = new Date().toISOString();
         const task = { id: randomId(), title, description, priority, deadline, status, assignedTo, createdAt: now, updatedAt: now };
         setTasks(prev => [task, ...prev]);
         return task.id;
-    }
-    function updateTask(id, patch) {
+    }, []);
+    const updateTask = useCallback((id, patch) => {
         setTasks(prev => prev.map(t => t.id === id ? { ...t, ...patch, updatedAt: new Date().toISOString() } : t));
-    }
-    function deleteTask(id) {
+    }, []);
+    const deleteTask = useCallback((id) => {
         setTasks(prev => prev.filter(t => t.id !== id));
-    }
-    function getTaskById(id) {
+    }, []);
+    const getTaskById = useCallback((id) => {
         return tasks.find(t => t.id === id) || null;
-    }
+    }, [tasks]);
 
-    const value = useMemo(() => ({ tasks, createTask, updateTask, deleteTask, getTaskById }), [tasks]);
+    const value = useMemo(() => ({ tasks, createTask, updateTask, deleteTask, getTaskById }), [tasks, createTask, updateTask, deleteTask, getTaskById]);
     return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>;
 }
 
